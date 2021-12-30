@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     
     @ObservedObject var location = UserLocViewModel()
+    @ObservedObject var weatherList = WeatherListViewModel()
     @State var isTrue: Bool = false
     @State var inputTextField = ""
     
@@ -32,8 +33,12 @@ struct ContentView: View {
                             } label: {
                                 Image(systemName: "paperplane.fill")
                             }
-
                         }
+                        Section(header: Text("Previsions"), content: {
+                            ForEach(weatherList.weatherList) { weather in
+                                Text(weather.desc)
+                            }
+                        })
                     }
                     .animation(.linear, value: isTrue)
                     .navigationTitle(location.userLocation?.city ?? "erreur")
@@ -42,6 +47,17 @@ struct ContentView: View {
                     }, label: {
                         Image(systemName: location.showLocation ? "location.fill" : "location.slash.fill")
                     }))
+                }
+                .onAppear() {
+                    if let user = location.userLocation {
+                        weatherList.requestforecast(userLocation: user)
+                    }
+                }
+                .onChange(of: location.userLocation?.city) { _ in
+                    if let user = location.userLocation {
+                        weatherList.requestforecast(userLocation: user)
+                    }
+
                 }
             }
         }
