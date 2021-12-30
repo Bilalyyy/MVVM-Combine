@@ -12,7 +12,7 @@ import Combine
 class weatherApi: WeatherProtocol, ObservableObject {
     
     
-    private var key = "5c49b87c153c16e959eeba7512f1a103"
+    private var key = /* Enter your apiKey*/
     private var session = URLSession.shared
     
     
